@@ -5,6 +5,16 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
 
 **This is a proof of concept and not end user ready.**
 
+![Picture of the prototype](/images/CNM64_Choplifter_1.jpg)
+
+This is the prototype. From bottom to top:
+* DVI/HDMI output RP Pico board with DVISock connector (receiving 8 MPixels per second from the VIC-II board!)
+* VIC-II emulation RP Pico board
+* 6510/RAM/ROM/CIA emulation RP2040 board
+* passive wiring hat (connectors for C64 IEC, keyboard, joystick ports)
+* PS/2 to C64 keyboard interface
+* [Choplifter](https://en.wikipedia.org/wiki/Choplifter)
+
 ## In a nutshell, this is (or aims to be)…
 * …a cycle exact Commodore 64 homecomputer emulator…
 * …running on 8 ARM Cortex M0+ CPU cores of 4 [RP2040](https://en.wikipedia.org/wiki/RP2040) microcontrollers (<1€ each!)…
