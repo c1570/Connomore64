@@ -7,13 +7,12 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
 
 ![Picture of the prototype](/images/CNM64_Choplifter_1.jpg)
 
-This is the prototype. From bottom to top:
-* DVI/HDMI output RP Pico board with DVISock connector (receiving 8 MPixels per second from the VIC-II board!)
-* VIC-II emulation RP Pico board
-* 6510/RAM/ROM/CIA emulation RP2040 board
-* passive wiring hat (connectors for C64 IEC, keyboard, joystick ports)
-* PS/2 to C64 keyboard interface
-* [Choplifter](https://en.wikipedia.org/wiki/Choplifter)
+<sup><sub>This is the prototype. From bottom to top:
+<br/>* DVI/HDMI output RP Pico board with DVISock connector (receiving 8 MPixels per second from the VIC-II board!)
+<br/>* VIC-II emulation RP Pico board
+<br/>* 6510/RAM/ROM/CIA emulation RP2040 board
+<br/>* passive wiring hat (connectors for C64 IEC, keyboard, joystick ports)
+<br/>* PS/2 to C64 keyboard interface</sub></sub>
 
 ## In a nutshell, this is (or aims to be)…
 * …a cycle exact Commodore 64 homecomputer emulator…
@@ -21,18 +20,20 @@ This is the prototype. From bottom to top:
 * …interconnected using a multiplexed 8 bit bus running at about 8 MHz effectively…
 * …using DVI/HDMI as video and audio output…
 * …with microsecond exact true to original real world signal timing…
-* …able to **interface with original hardware** such as the C1541 floppy drive.
+* …able to **interface with original hardware**…
+  * …such as the C1541 floppy drive, including fastloaders…
+  * …as well as userport and (some) expansion port based hardware.
 
 ## Additionally, this is…
 * …an example of running compute intensive software on cheap low powered interconnected microcontrollers…
 * …an emulation framework to test and debug projects using several RP2040s in parallel on a PC.
 
 ## But why?
-First and foremost, this was started as a holiday project (“porting an existing C64 emulator to a 400MHz ARM platform cannot take that long, can it?”) with a focus on playing a bit with the RP2040 microcontroller and getting an idea of what its PIOs (i.e., its GPIO handling coprocessors) are capable of.
-While some emulators (even of the C64, even on the RP2040) exist, those are using extremely simplified models of the C64, e.g., not emulating the exact steps and timing of MOS 6510 CPU opcodes, and not emulating the VIC-II video chip exactly but doing video line based emulation instead which limits compatibility.
-Accurate emulators of the C64 exist for FPGA platforms, but those platforms strike yours truly as quite overpowered and expensive, not as hackable as would be nice, and typically come with a rather unwieldy (and typically closed source) toolchain.
-
-The holiday of this “holiday project” was christmas 2022, and it turns out a single 400MHz M0+ core is definitely not enough to emulate a C64, if accuracy is some priority…
+* First and foremost, this was started as a holiday project (“porting an existing C64 emulator to a 400MHz ARM platform cannot take that long, can it?”) with a focus on playing a bit with the RP2040 microcontroller and getting an idea of what its PIOs (i.e., its GPIO handling coprocessors) are capable of.
+  * The holiday of this “holiday project” was christmas 2022, and it turns out a single 400MHz M0+ core is definitely not enough to emulate a C64, if accuracy is some priority…
+* While a C64 emulator on the RP2040 already [exists](https://github.com/silvervest/c64pico), it is using an extremely simplified model of the C64, e.g., not emulating the exact steps and timing of MOS 6510 CPU opcodes, and not emulating the VIC-II video chip exactly but doing video line based emulation instead which limits compatibility.
+* PC based emulators (VICE, BMC etc.) reach high emulation quality but do not feature perfect realtime timing. That means you cannot use physical retro hardware (floppy drives, etc.) with those emulators in general.
+* FPGA platform based emulators of the C64 reach high emulation quality and realtime accuracy, but those platforms strike yours truly as quite overpowered and expensive, not as hackable as would be nice, and typically come with a rather unwieldy (and typically closed source) toolchain.
 
 ## Building blocks
 ### rp2040 emulator
@@ -55,8 +56,14 @@ The C64 emulation code is based on the “[chips](https://github.com/floooh/chip
 ### Video output
 HDMI/DVI output is based on the [PicoDVI](https://github.com/Wren6991/PicoDVI) library by Luke Wren.
 
+### Audio output
+Provided by a port of the [SIDKick pico](https://github.com/frntc/SIDKick-pico) firmware to the Connomore64 bus system.
+
 ## Prototype hardware
-So far, the Connomore64 consists of three stacked RP2040 boards which are interconnected using the 8 bit bus mentioned before. Video output is done using a passive DVISock adapter. Using a small passive “hat”, it can connect to an original C64 keyboard, joysticks, as well as a floppy drive. Loading programs from the drive is possible using the original CBM routines as well as the much faster JiffyDOS or other speeders.
+So far, the Connomore64 consists of several stacked RP2040 boards which are interconnected using the 8 bit bus mentioned before.
+Video output is done using a passive DVISock adapter.
+Using a small passive “hat”, it can connect to an original C64 keyboard, joysticks, as well as a floppy drive.
+Loading programs from the drive is possible using the original CBM routines as well as the much faster JiffyDOS or other speeders.
 
 At some point, it would be sensible to create a dedicated board for the project.
 It could be made very cheap and small as only one flash chip and crystal would be needed, and setting up the microcontrollers could be done via SWD.
@@ -67,7 +74,6 @@ Some features are still missing - this project is work in progress.
 * Only the CPU half of each C64 cycle is emulated, limiting potential compatibility with C64 expansion port cartridges.
 * Userport software and hardware is not done (this should be easy though)
 * Expansion port firmware and hardware is not done (needs some thought)
-* SID audio is not done (it should be relatively straightforward to port [SIDKick pico](https://github.com/frntc/SIDKick-pico) though)
 
 ## License
 At the moment, the project and code is in no way release ready.
