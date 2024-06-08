@@ -26,33 +26,33 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
   * The holiday of this “holiday project” was christmas 2022, and it turns out a single 400MHz M0+ core is definitely not enough to emulate a C64, if accuracy is some priority…
 * While a C64 emulator on the RP2040 already [exists](https://github.com/silvervest/c64pico), it is using an extremely simplified model of the C64, e.g., not emulating the exact steps and timing of MOS 6510 CPU opcodes, and not emulating the VIC-II video chip exactly but doing video line based emulation instead which limits compatibility.
 * PC based emulators (VICE, BMC etc.) reach high emulation quality but do not feature perfect realtime timing. That means you cannot use physical retro hardware (floppy drives, etc.) with those emulators in general.
-* FPGA platform based emulators of the C64 reach high emulation quality and realtime accuracy, but those platforms strike yours truly as quite overpowered and expensive, not as hackable as would be nice, and typically come with a rather unwieldy (and typically closed source) toolchain.
+* FPGA based emulators of the C64 reach high emulation quality and realtime accuracy, but those platforms strike yours truly as quite overpowered and expensive, not as hackable as would be nice, and typically come with a rather unwieldy (and typically closed source) toolchain.
 
-## Building blocks
-### rp2040 emulator
+## Building Blocks
+### RP2040 Emulator
 For developing this project, the [rp2040js](https://github.com/wokwi/rp2040js) emulator project by Uri Shaked of [Wokwi.com](https://wokwi.com) fame has been extended. Very little debugging on real hardware happened. No logic analyzers were necessary at all!
 
 You can find my fork of rp2040js [here](https://github.com/c1570/rp2040js/).
 * cycle exact timing of PIOs has been added
 * [VCD](https://en.wikipedia.org/wiki/Value_change_dump) trace files can get generated for the GPIO signals
-* a simple framework for running multiple rp2040 emulation instances interfacing to each was written ([WIP code](https://github.com/c1570/rp2040js/blob/c1570/WIP/demo/ntc-run.ts))
+* a simple framework for running multiple rp2040 emulation instances interfacing to each other was written ([WIP code](https://github.com/c1570/rp2040js/blob/c1570/WIP/demo/ntc-run.ts))
 * simulation of input/output latency of the RP2040’s GPIOs
 * inter-core FIFO functionality has been added
 * functionality to output statistics and monitor any PIO stalls is present in the emulation runner that has been customized for this project
 
-### C64 emulator
+### C64 Emulator Code
 The C64 emulation code is based on the “[chips](https://github.com/floooh/chips)” emulation library by Andre Weissflog. A lot of performance optimizations have been done:
 * rewritten VIC-II graphics rendering code (running 5-10 times as fast as the previous code while sacrificing some compatibility)
 * rewritten Sprite rendering (in contrast to the original VIC-II, sprites are rendered into a buffer in the offscreen time)
 * faster CIA emulation using look up tables
 
-### Video output
+### Video Output
 HDMI/DVI output is based on the [PicoDVI](https://github.com/Wren6991/PicoDVI) library by Luke Wren.
 
-### Audio output
+### Audio Output
 Provided by a port of the [SIDKick pico](https://github.com/frntc/SIDKick-pico) firmware to the Connomore64 bus system.
 
-## Prototype hardware
+## Prototype Hardware
 So far, the Connomore64 consists of several stacked RP2040 boards which are interconnected using the 8 bit bus mentioned before.
 Video output is done using a passive DVISock adapter.
 Using a small passive “hat”, it can connect to an original C64 keyboard, joysticks, as well as a floppy drive.
@@ -60,13 +60,22 @@ Loading programs from the drive is possible using the original CBM routines as w
 
 At some point, it would be sensible to create a dedicated board for the project.
 It could be made very cheap and small as only one flash chip and crystal would be needed, and setting up the microcontrollers could be done via SWD.
-Total cost including connectors etc. below 20€ might be possible.
+Total cost below 20€ might be possible.
 
-## Missing features
-Some features are still missing - this project is work in progress.
+## Status
+### Compatibility
+* Runs most games just fine
+  * Armalyte, Katakis, R-Type, Bubble Bobble, ...
+* Fastloaders should "just work" (certainly JiffyDOS does)
+* Current TODO is Mayhem in Monsterland - VIC-II timing is slightly off and VSP doesn't work yet.
+
+### Missing Features
 * Only the CPU half of each C64 cycle is emulated, limiting potential compatibility with C64 expansion port cartridges.
+  * There is code for Phi low but RP2040s are not fast enough for that.
 * Userport software and hardware is not done (this should be easy though)
 * Expansion port firmware and hardware is not done (needs some thought)
+* CIA2 timers are not emulated (too little ARM cycles remaining but can be moved to another RP2040)
+* No time of day timers in CIAs (implementation missing)
 
 ## License
 At the moment, the project and code is in no way release ready.
