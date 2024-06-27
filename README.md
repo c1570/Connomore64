@@ -41,10 +41,14 @@ You can find my fork of rp2040js [here](https://github.com/c1570/rp2040js/).
 * functionality to output statistics and monitor any PIO stalls is present in the emulation runner that has been customized for this project
 
 ### C64 Emulator Code
-The C64 emulation code is based on the “[chips](https://github.com/floooh/chips)” emulation library by Andre Weissflog. A lot of performance optimizations have been done:
-* rewritten VIC-II graphics rendering code (running 5-10 times as fast as the previous code while sacrificing some compatibility)
-* rewritten Sprite rendering (in contrast to the original VIC-II, sprites are rendered into a buffer in the offscreen time)
+The C64 emulation code is based on the “[chips](https://github.com/floooh/chips)” emulation library by Andre Weissflog. A lot of optimizations have been done:
+* speed optimized VIC-II code
+  * rewritten graphics rendering code (running 5-10 times as fast as the previous code while sacrificing some compatibility)
+  * rendering bitmap/text mode is done using the RP2040's PIO/DMA
+  * rewritten Sprite rendering (in contrast to the original VIC-II, sprites are rendered into a buffer in the offscreen time)
+* fixed a few VIC-II emulation bugs (VSP/AGSP works now)
 * faster CIA emulation using look up tables
+* replaced `uint64_t pins` interface with 32 bits pins/direct variables
 
 ### Video Output
 HDMI/DVI output is based on the [PicoDVI](https://github.com/Wren6991/PicoDVI) library by Luke Wren.
@@ -65,16 +69,14 @@ Total cost below 20€ might be possible.
 ## Status
 ### Compatibility
 * Runs most games just fine
-  * Armalyte, Katakis, R-Type, Bubble Bobble, ...
+  * Mayhem in Monsterland, Armalyte, Katakis, R-Type, Bubble Bobble, ...
 * Fastloaders should "just work" (certainly JiffyDOS does)
-* Current TODO is Mayhem in Monsterland - VIC-II timing is slightly off and VSP doesn't work yet.
 
 ### Missing Features
 * Only the CPU half of each C64 cycle is emulated, limiting potential compatibility with C64 expansion port cartridges.
   * There is code for Phi low but RP2040s are not fast enough for that.
 * Userport software and hardware is not done (this should be easy though)
 * Expansion port firmware and hardware is not done (needs some thought)
-* CIA2 timers are not emulated (too little ARM cycles remaining but can be moved to another RP2040)
 * No time of day timers in CIAs (implementation missing)
 
 ## License
