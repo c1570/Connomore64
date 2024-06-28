@@ -46,7 +46,7 @@ The C64 emulation code is based on the “[chips](https://github.com/floooh/chip
   * rewritten graphics rendering code (running 5-10 times as fast as the previous code while sacrificing some compatibility)
   * rendering bitmap/text mode is done using the RP2040's PIO/DMA
   * rewritten Sprite rendering (in contrast to the original VIC-II, sprites are rendered into a buffer in the offscreen time)
-* fixed a few VIC-II emulation bugs (VSP/AGSP works now)
+* fixed a few [VIC-II emulation bugs](https://github.com/floooh/chips/issues/99) (VSP/AGSP works now)
 * faster CIA emulation using look up tables
 * replaced `uint64_t pins` interface with 32 bits pins/direct variables
 
@@ -54,7 +54,7 @@ The C64 emulation code is based on the “[chips](https://github.com/floooh/chip
 HDMI/DVI output is based on the [PicoDVI](https://github.com/Wren6991/PicoDVI) library by Luke Wren.
 
 ### Audio Output
-Provided by a port of the [SIDKick pico](https://github.com/frntc/SIDKick-pico) firmware to the Connomore64 bus system.
+Provided by a port of the [SIDKick pico](https://github.com/frntc/SIDKick-pico) firmware (by Carsten Dachsbacher, using reSID by Dag Lem) to the Connomore64 bus system.
 
 ## Prototype Hardware
 So far, the Connomore64 consists of several stacked RP2040 boards which are interconnected using the 8 bit bus mentioned before.
@@ -69,7 +69,7 @@ Total cost below 20€ might be possible.
 ## Status
 ### Compatibility
 * Runs most games just fine
-  * Mayhem in Monsterland, Armalyte, Katakis, R-Type, Bubble Bobble, ...
+  * Mayhem in Monsterland, Hawkeye, Armalyte, Katakis, R-Type, Bubble Bobble, ...
 * Fastloaders should "just work" (certainly JiffyDOS does)
 
 ### Missing Features
