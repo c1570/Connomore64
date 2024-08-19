@@ -7,6 +7,8 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
 
 ![Picture of the prototype](/images/CNM64_Prototype_1.jpg)
 
+**[July 2024 poster](/2024-07-Connomore64_poster.pdf)**
+
 ## In a nutshell, this is (or aims to be)…
 * …a **cycle exact Commodore 64 homecomputer emulator**…
 * …running on 8 ARM Cortex M0+ CPU cores of 4 [RP2040](https://en.wikipedia.org/wiki/RP2040) microcontrollers (<1€ each!)…
@@ -68,16 +70,16 @@ Total cost below 20€ might be possible.
 
 ## Status
 ### Compatibility
-* Runs most games just fine
-  * Mayhem in Monsterland, Hawkeye, Armalyte, Katakis, R-Type, Bubble Bobble, ...
+* Runs almost all games just fine
+  * Mayhem in Monsterland, Hawkeye, Armalyte, Katakis, R-Type, Bubble Bobble, Turrican, ...
+* Runs a good portion of demos (e.g., Layers)
 * Fastloaders should "just work" (certainly JiffyDOS does)
 
 ### Missing Features
 * Only the CPU half of each C64 cycle is emulated, limiting potential compatibility with C64 expansion port cartridges.
   * There is code for Phi low but RP2040s are not fast enough for that.
-* Userport software and hardware is not done (this should be easy though)
+* Userport software and hardware is WIP
 * Expansion port firmware and hardware is not done (needs some thought)
-* No time of day timers in CIAs (implementation missing)
 
 ## License
 At the moment, the project and code is in no way release ready.
