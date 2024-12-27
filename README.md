@@ -5,13 +5,13 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
 
 **This is a proof of concept and not end user ready.**
 
-![Picture of the prototype](/images/CNM64_Prototype_1.jpg)
+![Connomore64 breadbox v0 prototype](/images/CNM64_Breadbox_v0_prototype.jpg)
 
-**[July 2024 poster](/2024-07-Connomore64_poster.pdf)**
+**[July 2024 poster](/2024-07-Connomore64_poster.pdf)** (old prototype)
 
 ## In a nutshell, this is (or aims to be)…
 * …a **cycle exact Commodore 64 homecomputer emulator**…
-* …running on 8 ARM Cortex M0+ CPU cores of 4 [RP2040](https://en.wikipedia.org/wiki/RP2040) microcontrollers (<1€ each!)…
+* …an (almost) chip-by-chip rebuild using multiple [RP2040](https://en.wikipedia.org/wiki/RP2040) microcontrollers (<1€ each!)…
 * …interconnected using a multiplexed **8 bit bus** running at about 8 MHz effectively…
 * …using **DVI/HDMI** as video and audio output…
 * …with microsecond exact true to original real world signal timing…
@@ -58,14 +58,30 @@ HDMI/DVI output is based on the [PicoDVI](https://github.com/Wren6991/PicoDVI) l
 ### Audio Output
 Provided by a port of the [SIDKick pico](https://github.com/frntc/SIDKick-pico) firmware (by Carsten Dachsbacher, using reSID by Dag Lem) to the Connomore64 bus system.
 
-## Prototype Hardware
-So far, the Connomore64 consists of several stacked RP2040 boards which are interconnected using the 8 bit bus mentioned before.
+## Hardware
+### Breadbox v0 prototype (latest)
+This is a custom PCB that fits into the C64 case (shown on top of the page).
+It comes with the usual C64 ports (userport, IEC, expansion port, joystick ports) plus HDMI and audio jack.
+Currently, the userport, IEC, and joystick ports are functional.
+Support for select expansion port cartridges (e.g., Magic Desk) is upcoming.
+
+Goals of this prototype:
+* All original C64 connectors available
+* Simple to build
+* Easy migration to RP2350 in development
+* Testbed for SWD-based firmware handling
+
+### Stacked Pico boards (early prototype)
+The first prototype was several stacked RP2040 boards.
 Video output is done using a passive DVISock adapter.
 Using a small passive “hat”, it can connect to an original C64 keyboard, joysticks, as well as a floppy drive.
 Loading programs from the drive is possible using the original CBM routines as well as the much faster JiffyDOS or other speeders.
 
-At some point, it would be sensible to create a dedicated board for the project.
-It could be made very cheap and small as only one flash chip and crystal would be needed, and setting up the microcontrollers could be done via SWD.
+![Early prototype](/images/CNM64_Prototype_1.jpg)
+
+### General
+Smaller custom PCBs for the Connomore are possible.
+Those could be made very cheap and small as only one flash chip and crystal would be needed, and setting up the microcontrollers could be done via SWD.
 Total cost below 20€ might be possible.
 
 ## Status
@@ -74,11 +90,11 @@ Total cost below 20€ might be possible.
   * Mayhem in Monsterland, Hawkeye, Armalyte, Katakis, R-Type, Bubble Bobble, Turrican, ...
 * Runs a good portion of demos (e.g., Layers)
 * Fastloaders should "just work" (certainly JiffyDOS does)
+* User port hardware works (tested with WiC64)
 
 ### Missing Features
 * Only the CPU half of each C64 cycle is emulated, limiting potential compatibility with C64 expansion port cartridges.
   * There is code for Phi low but RP2040s are not fast enough for that.
-* Userport software and hardware is WIP
 * Expansion port firmware and hardware is not done (needs some thought)
 
 ## License
