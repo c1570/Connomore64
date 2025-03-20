@@ -11,7 +11,7 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
 
 ## In a nutshell, this is (or aims to be)…
 * …a **cycle exact Commodore 64 homecomputer emulator**…
-* …an (almost) chip-by-chip rebuild using multiple [RP2040](https://en.wikipedia.org/wiki/RP2040) microcontrollers (<1€ each!)…
+* …an (almost) chip-by-chip rebuild using multiple [RP2040](https://en.wikipedia.org/wiki/RP2040)/[RP2350](https://en.wikipedia.org/wiki/RP2350) microcontrollers (<1€ per chip!)…
 * …interconnected using a multiplexed **8 bit bus** running at about 8 MHz effectively…
 * …using **DVI/HDMI** as video and audio output…
 * …with microsecond exact true to original real world signal timing…
@@ -21,7 +21,7 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
 
 ### Additionally, this is…
 * …an example of running **compute intensive software on cheap low powered interconnected microcontrollers**…
-* …an **emulation framework** to test and debug projects using several RP2040s in parallel on a PC.
+* …an **emulation framework** to test and debug projects using several RP2040/RP2350s in parallel on a PC.
 
 ## But why?
 * First and foremost, this was started as a holiday project (“porting an existing C64 emulator to a 400MHz ARM platform cannot take that long, can it?”) with a focus on playing a bit with the RP2040 microcontroller and getting an idea of what its PIOs (i.e., its GPIO handling coprocessors) are capable of.
@@ -31,22 +31,22 @@ Realtime cycle exact emulation of the [Commodore 64](https://en.wikipedia.org/wi
 * FPGA based emulators of the C64 reach high emulation quality and realtime accuracy, but those platforms strike yours truly as quite overpowered and expensive, not as hackable as would be nice, and typically come with a rather unwieldy (and typically closed source) toolchain.
 
 ## Building Blocks
-### RP2040 Emulator
+### RP2040/RP2350 Emulator
 For developing this project, the [rp2040js](https://github.com/wokwi/rp2040js) emulator project by Uri Shaked of [Wokwi.com](https://wokwi.com) fame has been extended. Very little debugging on real hardware happened. No logic analyzers were necessary at all!
 
-You can find my fork of rp2040js [here](https://github.com/c1570/rp2040js/).
-* cycle exact timing of PIOs has been added
+You can find my fork of rp2040js [here](https://github.com/c1570/rp2040js/). It features:
+* RP2350 support (RISC-V/Hazard3 only)
+* cycle exact timing of PIOs
 * [VCD](https://en.wikipedia.org/wiki/Value_change_dump) trace files can get generated for the GPIO signals
-* a simple framework for running multiple rp2040 emulation instances interfacing to each other was written ([WIP code](https://github.com/c1570/rp2040js/blob/c1570/WIP/demo/ntc-run.ts))
-* simulation of input/output latency of the RP2040’s GPIOs
-* inter-core FIFO functionality has been added
+* a simple framework for running multiple chip emulation instances interfacing to each other ([WIP code](https://github.com/c1570/rp2040js/blob/rp2350js/WIP/demo/ntc-run.ts))
+* simulation of input/output latency of GPIOs
 * functionality to output statistics and monitor any PIO stalls is present in the emulation runner that has been customized for this project
 
 ### C64 Emulator Code
 The C64 emulation code is based on the “[chips](https://github.com/floooh/chips)” emulation library by Andre Weissflog. A lot of optimizations have been done:
 * speed optimized VIC-II code
   * rewritten graphics rendering code (running 5-10 times as fast as the previous code while sacrificing some compatibility)
-  * rendering bitmap/text mode is done using the RP2040's PIO/DMA
+  * rendering bitmap/text mode is done using PIO/DMA
   * rewritten Sprite rendering (in contrast to the original VIC-II, sprites are rendered into a buffer in the offscreen time)
 * fixed a few [VIC-II emulation bugs](https://github.com/floooh/chips/issues/99) (VSP/AGSP works now)
 * faster CIA emulation using look up tables
@@ -89,12 +89,12 @@ Total cost below 20€ might be possible.
 * Runs almost all games just fine
   * Mayhem in Monsterland, Hawkeye, Armalyte, Katakis, R-Type, Bubble Bobble, Turrican, ...
 * Runs a good portion of demos (e.g., Layers)
-* Fastloaders should "just work" (certainly JiffyDOS does)
+* Fastloaders work just fine (tested with JiffyDOS and [Transwarp](https://www.c64-wiki.com/wiki/Transwarp))
 * User port hardware works (tested with WiC64)
 
 ### Missing Features
 * Only the CPU half of each C64 cycle is emulated, limiting potential compatibility with C64 expansion port cartridges.
-  * There is code for Phi low but RP2040s are not fast enough for that.
+  * There is code for Phi low but RP2040/RP2350s are not fast enough for that.
 * Expansion port firmware and hardware is not done (needs some thought)
 
 ## License
